@@ -3,6 +3,31 @@ import { CommentList } from "@/components/CommentList";
 import { Vote } from "@/components/Vote";
 import { db } from "@/db";
 
+export async function generateMetadata({ params }, parent) {
+  const postId = params.postId;
+
+  try {
+    const response = await fetch(
+      `https://didit-reddit-upvote-example-mu-livid.vercel.app/post/${postId}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${postId}`);
+    }
+
+    const post = await res.json();
+
+    return {
+      title: post.title || "Post not found",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Error loading post",
+    };
+  }
+}
+
 export default async function SinglePostPage({ params }) {
   const postId = params.postId;
 
